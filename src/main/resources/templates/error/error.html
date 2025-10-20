@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ошибка</title>
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.3/css/bootstrap.min.css}">
+    <style>
+        body {
+            background-color: #212529;
+            color: #FFFFFF;
+            font-family: Arial, sans-serif;
+        }
+        .navbar {
+            background-color: #DC3545;
+        }
+        .navbar-brand, .nav-link {
+            color: #FFFFFF !important;
+        }
+        .nav-link:hover {
+            color: #E9ECEF !important;
+        }
+        .container {
+            background-color: #FFFFFF;
+            color: #212529;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        .error-container {
+            text-align: center;
+            padding: 40px 20px;
+        }
+        .error-code {
+            font-size: 6rem;
+            font-weight: bold;
+            color: #DC3545;
+            margin-bottom: 20px;
+        }
+        .error-message {
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+            color: #6c757d;
+        }
+        .btn-primary {
+            background-color: #DC3545;
+            border-color: #DC3545;
+        }
+        .btn-primary:hover {
+            background-color: #C82333;
+            border-color: #C82333;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">Панель администратора</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/manufacturers}">Производители</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/categories}">Категории</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/suppliers}">Поставщики</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/products}">Продукты</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/product-details}">Детали продуктов</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="error-container">
+            <div class="error-code" th:text="${errorCode}">500</div>
+            <div class="error-message" th:text="${errorMessage}">Произошла ошибка</div>
+            <a href="/" class="btn btn-primary">Вернуться на главную</a>
+        </div>
+    </div>
+    <script th:src="@{/webjars/bootstrap/5.3.3/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>

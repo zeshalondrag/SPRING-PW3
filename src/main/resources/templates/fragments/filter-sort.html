@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Фильтрация и сортировка</title>
+</head>
+<body>
+
+<!-- Общий компонент фильтрации и сортировки -->
+<div th:fragment="filter-sort-form" class="card mb-4">
+    <div class="card-header">
+        <h5 class="mb-0">Фильтрация и сортировка</h5>
+    </div>
+    <div class="card-body">
+        <form method="get" th:action="@{__${actionUrl}__}" class="row g-3">
+            <!-- Поиск -->
+            <div class="col-md-3">
+                <label for="query" class="form-label">Поиск</label>
+                <input type="text" class="form-control" id="query" name="query" 
+                       th:value="${query}" placeholder="Введите поисковый запрос">
+            </div>
+            
+            <!-- Сортировка -->
+            <div class="col-md-2">
+                <label for="sortBy" class="form-label">Сортировать по</label>
+                <select class="form-select" id="sortBy" name="sortBy">
+                    <option th:each="field : ${sortFields}" 
+                            th:value="${field.value}" 
+                            th:text="${field.label}"
+                            th:selected="${sortBy == field.value}"></option>
+                </select>
+            </div>
+            
+            <div class="col-md-2">
+                <label for="sortDir" class="form-label">Направление</label>
+                <select class="form-select" id="sortDir" name="sortDir">
+                    <option value="asc" th:selected="${sortDir == 'asc'}">По возрастанию</option>
+                    <option value="desc" th:selected="${sortDir == 'desc'}">По убыванию</option>
+                </select>
+            </div>
+            
+            <!-- Размер страницы -->
+            <div class="col-md-2">
+                <label for="size" class="form-label">На странице</label>
+                <select class="form-select" id="size" name="size">
+                    <option value="5" th:selected="${size == 5}">5</option>
+                    <option value="10" th:selected="${size == 10}">10</option>
+                    <option value="20" th:selected="${size == 20}">20</option>
+                    <option value="50" th:selected="${size == 50}">50</option>
+                </select>
+            </div>
+            
+            <!-- Дополнительные фильтры (будут переопределены в конкретных шаблонах) -->
+            <div th:fragment="additional-filters" class="col-md-3">
+                <!-- Дополнительные фильтры -->
+            </div>
+            
+            <!-- Кнопки -->
+            <div class="col-md-12">
+                <button type="submit" class="btn btn-primary">Применить</button>
+                <a th:href="@{__${actionUrl}__}" class="btn btn-secondary">Сбросить</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Компонент пагинации -->
+<div th:fragment="pagination" class="d-flex justify-content-between align-items-center">
+    <div>
+        <span th:text="'Показано ' + ${#lists.size(items)} + ' из ' + ${totalElements} + ' записей'"></span>
+    </div>
+    <nav th:if="${totalPages > 1}">
+        <ul class="pagination mb-0">
+            <!-- Предыдущая страница -->
+            <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
+                <a class="page-link" th:href="@{__${actionUrl}__(page=${currentPage - 1}, size=${size}, query=${query}, sortBy=${sortBy}, sortDir=${sortDir})}">Предыдущая</a>
+            </li>
+            
+            <!-- Страницы -->
+            <li th:each="pageNum : ${#numbers.sequence(0, totalPages - 1)}" 
+                class="page-item" 
+                th:classappend="${pageNum == currentPage} ? 'active'">
+                <a class="page-link" 
+                   th:href="@{__${actionUrl}__(page=${pageNum}, size=${size}, query=${query}, sortBy=${sortBy}, sortDir=${sortDir})}"
+                   th:text="${pageNum + 1}"></a>
+            </li>
+            
+            <!-- Следующая страница -->
+            <li class="page-item" th:classappend="${currentPage == totalPages - 1} ? 'disabled'">
+                <a class="page-link" th:href="@{__${actionUrl}__(page=${currentPage + 1}, size=${size}, query=${query}, sortBy=${sortBy}, sortDir=${sortDir})}">Следующая</a>
+            </li>
+        </ul>
+    </nav>
+</div>
+
+<!-- Компонент сортируемых заголовков таблицы -->
+<th th:fragment="sortable-header(field, label)" class="sortable">
+    <a th:href="@{__${actionUrl}__(page=${currentPage}, size=${size}, query=${query}, sortBy=${field}, sortDir=${sortDir == 'asc' and sortBy == field} ? 'desc' : 'asc')}" 
+       class="text-decoration-none">
+        <span th:text="${label}"></span>
+        <span th:if="${sortBy == field}" class="ms-1">
+            <i th:if="${sortDir == 'asc'}" class="fas fa-sort-up"></i>
+            <i th:if="${sortDir == 'desc'}" class="fas fa-sort-down"></i>
+        </span>
+        <span th:unless="${sortBy == field}" class="ms-1 text-muted">
+            <i class="fas fa-sort"></i>
+        </span>
+    </a>
+</th>
+
+</body>
+</html>
+
